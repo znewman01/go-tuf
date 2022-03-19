@@ -245,6 +245,17 @@ func (rs *RepoSuite) TestGenKey(c *C) {
 	genKey(c, r, "targets")
 	genKey(c, r, "targets")
 
+	// test generating delegated roles
+	delegatedOpts := NewGenKeyOpts().SetDelegated(true)
+	_, err = r.GenKeyWithOpts("root", *delegatedOpts)
+	c.Assert(err, Equals, ErrInvalidRole{"root", "cannot make delegated key for top-level role"})
+	keyids, err := r.GenKeyWithOpts("delegated_role", *delegatedOpts)
+	c.Assert(err, IsNil)
+	c.Assert(len(keyids), Equals, 1)
+	signers, err := r.local.GetSigners("delegated_role")
+	c.Assert(err, IsNil)
+	c.Assert(len(signers), Equals, 1)
+
 	// check root metadata is correct
 	root, err = r.root()
 	c.Assert(err, IsNil)

@@ -334,17 +334,24 @@ func (r *Repo) ChangePassphrase(keyRole string) error {
 }
 
 type GenKeyOpts struct {
-	expires *time.Time
+	expires   *time.Time
+	delegated bool
 }
 
 func NewGenKeyOpts() *GenKeyOpts {
 	return &GenKeyOpts{
-		expires: nil,
+		expires:   nil,
+		delegated: false,
 	}
 }
 
 func (b *GenKeyOpts) SetExpires(expires *time.Time) *GenKeyOpts {
 	b.expires = expires
+	return b
+}
+
+func (b *GenKeyOpts) SetDelegated(delegated bool) *GenKeyOpts {
+	b.delegated = delegated
 	return b
 }
 
@@ -361,9 +368,18 @@ func (r *Repo) GenKeyWithOpts(keyRole string, opts GenKeyOpts) (keyids []string,
 		expires = data.DefaultExpires(keyRole)
 	}
 
-	if err = r.AddPrivateKeyWithExpires(keyRole, signer, expires); err != nil {
-		return []string{}, err
+	if opts.delegated {
+		if !roles.IsDelegatedTargetsRole(keyRole) {
+			return []string{}, ErrInvalidRole{keyRole, "cannot make delegated key for top-level role"}
+		}
+		r.local.SaveSigner(keyRole, signer)
+	} else {
+		// This calls SaveSigner *and* adds the key to the root metadata.
+		if err = r.AddPrivateKeyWithExpires(keyRole, signer, expires); err != nil {
+			return []string{}, err
+		}
 	}
+
 	keyids = signer.PublicData().IDs()
 	return
 }
@@ -373,7 +389,6 @@ func (r *Repo) GenKey(keyRole string) ([]string, error) {
 	return r.GenKeyWithOpts(keyRole, *opts)
 }
 
-// Deprecated: use GenKeyWithOpts instead.
 func (r *Repo) GenKeyWithExpires(keyRole string, expires time.Time) (keyids []string, err error) {
 	opts := NewGenKeyOpts().SetExpires(&expires)
 	return r.GenKeyWithOpts(keyRole, *opts)
