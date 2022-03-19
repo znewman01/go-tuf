@@ -30,16 +30,16 @@ func cmdGenKey(args *docopt.Args, repo *tuf.Repo) error {
 	role := args.String["<role>"]
 	var keyids []string
 	var err error
+	opts := tuf.NewGenKeyOpts()
 	if arg := args.String["--expires"]; arg != "" {
 		var expires time.Time
 		expires, err = parseExpires(arg)
 		if err != nil {
 			return err
 		}
-		keyids, err = repo.GenKeyWithExpires(role, expires)
-	} else {
-		keyids, err = repo.GenKey(role)
+		opts.SetExpires(&expires)
 	}
+	keyids, err = repo.GenKeyWithOpts(role, *opts)
 	if err != nil {
 		return err
 	}

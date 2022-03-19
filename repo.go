@@ -333,14 +333,32 @@ func (r *Repo) ChangePassphrase(keyRole string) error {
 	return ErrChangePassphraseNotSupported
 }
 
-func (r *Repo) GenKey(role string) ([]string, error) {
-	return r.GenKeyWithExpires(role, data.DefaultExpires(role))
+type GenKeyOpts struct {
+	expires *time.Time
 }
 
-func (r *Repo) GenKeyWithExpires(keyRole string, expires time.Time) (keyids []string, err error) {
+func NewGenKeyOpts() *GenKeyOpts {
+	return &GenKeyOpts{
+		expires: nil,
+	}
+}
+
+func (b *GenKeyOpts) SetExpires(expires *time.Time) *GenKeyOpts {
+	b.expires = expires
+	return b
+}
+
+func (r *Repo) GenKeyWithOpts(keyRole string, opts GenKeyOpts) (keyids []string, err error) {
 	signer, err := keys.GenerateEd25519Key()
 	if err != nil {
 		return []string{}, err
+	}
+
+	var expires time.Time
+	if opts.expires != nil {
+		expires = *opts.expires
+	} else {
+		expires = data.DefaultExpires(keyRole)
 	}
 
 	if err = r.AddPrivateKeyWithExpires(keyRole, signer, expires); err != nil {
@@ -348,6 +366,17 @@ func (r *Repo) GenKeyWithExpires(keyRole string, expires time.Time) (keyids []st
 	}
 	keyids = signer.PublicData().IDs()
 	return
+}
+
+func (r *Repo) GenKey(keyRole string) ([]string, error) {
+	opts := NewGenKeyOpts()
+	return r.GenKeyWithOpts(keyRole, *opts)
+}
+
+// Deprecated: use GenKeyWithOpts instead.
+func (r *Repo) GenKeyWithExpires(keyRole string, expires time.Time) (keyids []string, err error) {
+	opts := NewGenKeyOpts().SetExpires(&expires)
+	return r.GenKeyWithOpts(keyRole, *opts)
 }
 
 func (r *Repo) AddPrivateKey(role string, signer keys.Signer) error {

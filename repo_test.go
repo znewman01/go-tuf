@@ -1111,7 +1111,7 @@ func (rs *RepoSuite) TestExpiresAndVersion(c *C) {
 	c.Assert(err, IsNil)
 
 	past := time.Now().Add(-1 * time.Second)
-	_, genKeyErr := r.GenKeyWithExpires("root", past)
+	_, genKeyErr := r.GenKeyWithOpts("root", *NewGenKeyOpts().SetExpires(&past))
 	for _, err := range []error{
 		genKeyErr,
 		r.AddTargetWithExpires("foo.txt", nil, past),
@@ -1137,7 +1137,7 @@ func (rs *RepoSuite) TestExpiresAndVersion(c *C) {
 	c.Assert(root.Version, Equals, 1)
 
 	expires := time.Now().Add(24 * time.Hour)
-	_, err = r.GenKeyWithExpires("root", expires)
+	_, err = r.GenKeyWithOpts("root", *NewGenKeyOpts().SetExpires(&expires))
 	c.Assert(err, IsNil)
 	c.Assert(r.Snapshot(), IsNil)
 	c.Assert(r.Timestamp(), IsNil)

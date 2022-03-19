@@ -133,7 +133,7 @@ func (s *ClientSuite) genKey(c *C, role string) []string {
 }
 
 func (s *ClientSuite) genKeyExpired(c *C, role string) []string {
-	ids, err := s.repo.GenKeyWithExpires(role, s.expiredTime)
+	ids, err := s.repo.GenKeyWithOpts(role, *tuf.NewGenKeyOpts().SetExpires(&s.expiredTime))
 	c.Assert(err, IsNil)
 	return ids
 }
