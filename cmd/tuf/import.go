@@ -2,11 +2,13 @@ package main
 
 import (
 	"crypto/ecdsa"
+	"crypto/x509"
+	"encoding/pem"
+	"errors"
 	"fmt"
 	"os"
 
 	"github.com/flynn/go-docopt"
-	"github.com/sigstore/sigstore/pkg/cryptoutils"
 	"github.com/theupdateframework/go-tuf"
 	"github.com/theupdateframework/go-tuf/pkg/keys"
 )
@@ -22,11 +24,15 @@ Assumes no passphrase for now, I'm lazy.
 }
 
 func cmdImportKey(args *docopt.Args, repo *tuf.Repo) error {
-	bytes, err := os.ReadFile(args.String["<file>"])
+	pemBytes, err := os.ReadFile(args.String["<file>"])
 	if err != nil {
 		return err
 	}
-	pubKey, err := cryptoutils.UnmarshalPEMToPublicKey(bytes)
+	derBytes, _ := pem.Decode(pemBytes)
+	if derBytes == nil {
+		return errors.New("PEM decoding failed")
+	}
+	pubKey, err := x509.ParsePKIXPublicKey(derBytes.Bytes)
 	if err != nil {
 		return err
 	}
