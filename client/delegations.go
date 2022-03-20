@@ -96,8 +96,10 @@ func (c *Client) PrintPeople(target string) ([]data.Delegations, error) {
 				matchingRoles = append(matchingRoles, role)
 			}
 		}
-		targets.Delegations.Roles = matchingRoles
-		people = append(people, *targets.Delegations)
+		if len(matchingRoles) > 0 {
+			targets.Delegations.Roles = matchingRoles
+			people = append(people, *targets.Delegations)
+		}
 
 		if targets.Delegations != nil {
 			delegationsVerifier, err := verify.NewDelegationsVerifier(targets.Delegations)
