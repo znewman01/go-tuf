@@ -2,3 +2,5 @@
 cmd/tuf/tuf
 cmd/tuf-client/tuf-client
 .vscode
+/tuf
+/tuf-client
