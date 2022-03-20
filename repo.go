@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"path"
-	"reflect"
 	"sort"
 	"strings"
 	"time"
@@ -337,34 +336,55 @@ func (r *Repo) ChangePassphrase(keyRole string) error {
 	return ErrChangePassphraseNotSupported
 }
 
-func (r *Repo) ImportPubKey(pubKey *data.PublicKey, roleFilename string) error {
-	keyRole := strings.TrimSuffix(roleFilename, ".json")
-	if !roles.IsTopLevelRole(keyRole) {
-		return ErrInvalidRole{keyRole, "only support imports for top-level roles"}
-	}
+func (r *Repo) importPubKeyRoot(pubKey *data.PublicKey, keyRole string) error {
 	root, err := r.root()
 	if err != nil {
 		return err
 	}
-	keyIDs := pubKey.IDs()
-	for _, keyID := range keyIDs {
-		old, exists := root.Keys[keyID]
-		if exists {
-			old.IDs() // so we can check equality; IDs needs to be cached
-			if !reflect.DeepEqual(*pubKey, *old) {
-				return fmt.Errorf("can't change key for ID: was: %v, got: %v", pubKey, old)
-			}
-		} else {
-			root.Keys[keyID] = pubKey
-		}
-	}
-	root.Roles[keyRole].AddKeyIDs(keyIDs)
 
+	root.AddKey(pubKey)
+	root.Roles[keyRole].AddKeyIDs(pubKey.IDs())
+
+	// Write the metadata back
 	if !r.local.FileIsStaged("root.json") {
 		root.Version++
 	}
-
 	return r.setTopLevelMeta("root.json", root)
+}
+
+func (r *Repo) importPubKeyTargets(pubKey *data.PublicKey, keyRole string) error {
+	targets, err := r.topLevelTargets()
+	if err != nil {
+		return err
+	}
+
+	// Add the keys to Delegations.Keys
+	targets.Delegations.AddKey(pubKey)
+	// Add the key IDs to the appropriate role
+	for i, role := range targets.Delegations.Roles {
+		if role.Name == keyRole {
+			role.AddKeyIDs(pubKey.IDs())
+			targets.Delegations.Roles[i] = role
+		}
+	}
+
+	// Write the metadata back
+	if !r.local.FileIsStaged("targets.json") {
+		targets.Version++
+	}
+
+	fmt.Println("yo", targets.Delegations.Roles)
+	return r.setTopLevelMeta("targets.json", targets)
+}
+
+func (r *Repo) ImportPubKey(pubKey *data.PublicKey, keyRole string) error {
+	if roles.IsTopLevelRole(keyRole) {
+		return r.importPubKeyRoot(pubKey, keyRole)
+	} else {
+		// TODO: nested delegations
+		return r.importPubKeyTargets(pubKey, keyRole)
+	}
+
 }
 
 type GenKeyOpts struct {

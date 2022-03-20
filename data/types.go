@@ -217,6 +217,17 @@ type Delegations struct {
 	Roles []DelegatedRole       `json:"roles"`
 }
 
+func (d *Delegations) AddKey(key *PublicKey) bool {
+	changed := false
+	for _, id := range key.IDs() {
+		if _, ok := d.Keys[id]; !ok {
+			changed = true
+			d.Keys[id] = key
+		}
+	}
+	return changed
+}
+
 // DelegatedRole describes a delegated role, including what paths it is
 // reponsible for. See spec v1.0.19 section 4.5.
 type DelegatedRole struct {
@@ -289,6 +300,21 @@ func (d *DelegatedRole) UnmarshalJSON(b []byte) error {
 	}
 
 	return d.validatePaths()
+}
+
+func (r *DelegatedRole) AddKeyIDs(ids []string) bool {
+	roleIDs := make(map[string]struct{})
+	for _, id := range r.KeyIDs {
+		roleIDs[id] = struct{}{}
+	}
+	changed := false
+	for _, id := range ids {
+		if _, ok := roleIDs[id]; !ok {
+			changed = true
+			r.KeyIDs = append(r.KeyIDs, id)
+		}
+	}
+	return changed
 }
 
 func NewTargets() *Targets {
