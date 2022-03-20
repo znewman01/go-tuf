@@ -60,13 +60,13 @@ func (c *Client) getTargetFileMeta(target string) (data.TargetFileMeta, error) {
 // WHO CAN VOUCH FOR THIS TARGET
 // Requires a local snapshot to be loaded and is locked to the snapshot versions.
 // Searches through delegated targets following TUF spec 1.0.19 section 5.6.
-func (c *Client) PrintPeople(target string) ([]data.DelegatedRole, error) {
+func (c *Client) PrintPeople(target string) ([]data.Delegations, error) {
 	snapshot, err := c.loadLocalSnapshot()
 	if err != nil {
 		return nil, err
 	}
 
-	people := make([]data.DelegatedRole, 0)
+	people := make([]data.Delegations, 0)
 	// TODO: print toplevel separate?
 
 	// delegationsIterator covers 5.6.7
@@ -86,15 +86,18 @@ func (c *Client) PrintPeople(target string) ([]data.DelegatedRole, error) {
 			continue
 		}
 
+		matchingRoles := make([]data.DelegatedRole, 0)
 		for _, role := range targets.Delegations.Roles {
 			matches, err := role.MatchesPath(target)
 			if err != nil {
 				return nil, err
 			}
-			if matches {
-				people = append(people, role)
+			if !matches {
+				matchingRoles = append(matchingRoles, role)
 			}
 		}
+		targets.Delegations.Roles = matchingRoles
+		people = append(people, *targets.Delegations)
 
 		if targets.Delegations != nil {
 			delegationsVerifier, err := verify.NewDelegationsVerifier(targets.Delegations)
