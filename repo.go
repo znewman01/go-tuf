@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"path"
+	"reflect"
 	"sort"
 	"strings"
 	"time"
@@ -334,6 +335,36 @@ func (r *Repo) ChangePassphrase(keyRole string) error {
 	}
 
 	return ErrChangePassphraseNotSupported
+}
+
+func (r *Repo) ImportPubKey(pubKey *data.PublicKey, roleFilename string) error {
+	keyRole := strings.TrimSuffix(roleFilename, ".json")
+	if !roles.IsTopLevelRole(keyRole) {
+		return ErrInvalidRole{keyRole, "only support imports for top-level roles"}
+	}
+	root, err := r.root()
+	if err != nil {
+		return err
+	}
+	keyIDs := pubKey.IDs()
+	for _, keyID := range keyIDs {
+		old, exists := root.Keys[keyID]
+		if exists {
+			old.IDs() // so we can check equality; IDs needs to be cached
+			if !reflect.DeepEqual(*pubKey, *old) {
+				return fmt.Errorf("can't change key for ID: was: %v, got: %v", pubKey, old)
+			}
+		} else {
+			root.Keys[keyID] = pubKey
+		}
+	}
+	root.Roles[keyRole].AddKeyIDs(keyIDs)
+
+	if !r.local.FileIsStaged("root.json") {
+		root.Version++
+	}
+
+	return r.setTopLevelMeta("root.json", root)
 }
 
 type GenKeyOpts struct {

@@ -46,6 +46,7 @@ Commands:
   root-keys          Output a JSON serialized array of root keys to STDOUT
   clean              Remove all staged metadata files
   delegate           Delegate
+  import-key         Import a PEM public key.
 
 See "tuf help <command>" for more information on a specific command
 `

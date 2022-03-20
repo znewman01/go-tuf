@@ -69,3 +69,17 @@ func (p *p256Verifier) UnmarshalPublicKey(key *data.PublicKey) error {
 	p.key = key
 	return nil
 }
+
+type ecdsaPublic struct {
+	PublicKey data.HexBytes `json:"public"`
+}
+
+func Import(pub ecdsa.PublicKey) *data.PublicKey {
+	keyValBytes, _ := json.Marshal(ecdsaPublic{PublicKey: elliptic.Marshal(pub.Curve, pub.X, pub.Y)})
+	return &data.PublicKey{
+		Type:       data.KeyTypeECDSA_SHA2_P256,
+		Scheme:     data.KeySchemeECDSA_SHA2_P256,
+		Algorithms: data.HashAlgorithms,
+		Value:      keyValBytes,
+	}
+}
