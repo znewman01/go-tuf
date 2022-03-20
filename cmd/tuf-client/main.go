@@ -22,6 +22,7 @@ Commands:
   init         Initialize with root keys
   list         List available target files
   get          Get a target file
+  who-can-sign Who can sign
 
 See "tuf-client help <command>" for more information on a specific command.
 `
