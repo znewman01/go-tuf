@@ -92,7 +92,7 @@ func (c *Client) PrintPeople(target string) ([]data.Delegations, error) {
 			if err != nil {
 				return nil, err
 			}
-			if !matches {
+			if matches {
 				matchingRoles = append(matchingRoles, role)
 			}
 		}
