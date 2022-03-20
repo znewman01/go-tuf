@@ -1117,6 +1117,72 @@ func (r *Repo) Clean() error {
 	return err
 }
 
+// Add a delegation from the top-level targets role to the given role for the given paths.
+func (r *Repo) Delegate(keyRole string, name string, paths []string, threshold int) error {
+	t, err := r.topLevelTargets()
+	if err != nil {
+		return err
+	}
+	if !roles.IsDelegatedTargetsRole(keyRole) {
+		return ErrInvalidRole{keyRole, "cannot delegate to a key for a top level role"}
+	}
+
+	// This is the thing to fix.
+	delegations := t.Delegations
+	if delegations == nil {
+		delegations = &data.Delegations{}
+	}
+
+	signers, err := r.local.GetSigners(keyRole)
+	if err != nil {
+		return err
+	}
+
+	// Fix delegations.Keys: should contain public keys for all signers
+	allKeyIDs := make([]string, 0)
+	if delegations.Keys == nil {
+		delegations.Keys = make(map[string]*data.PublicKey, 0)
+	}
+	for _, signer := range signers {
+		pubKey := signer.PublicData()
+		for _, id := range pubKey.IDs() {
+			allKeyIDs = append(allKeyIDs, id)
+			value, exists := delegations.Keys[id]
+			if exists {
+				if value != pubKey {
+					panic("keyID exists with different value")
+				}
+				continue
+			}
+			delegations.Keys[id] = pubKey
+		}
+	}
+
+	// Fix delegations.Roles: add Role
+	// - check that there is no duplicate delegation name
+	for _, delegated := range delegations.Roles {
+		if name == delegated.Name {
+			return ErrInvalidRole{keyRole, "duplicate role name for delegation"}
+		}
+	}
+	role := data.DelegatedRole{
+		Name:             name,
+		KeyIDs:           allKeyIDs,
+		Threshold:        threshold,
+		Terminating:      true, // TODO: support for non-terminating delegations
+		PathHashPrefixes: nil,
+		Paths:            paths,
+	}
+	delegations.Roles = append(delegations.Roles, role)
+
+	t.Delegations = delegations
+	if err = r.writeTargetWithExpires(t, t.Expires); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *Repo) verifySignature(roleFilename string, db *verify.DB) error {
 	s, err := r.SignedMeta(roleFilename)
 	if err != nil {

@@ -37,6 +37,7 @@ Commands:
   snapshot           Update the snapshot metadata file
   timestamp          Update the timestamp metadata file
   sign               Sign a role's metadata file
+  delegate           Delegate
   commit             Commit staged files to the repository
   regenerate         Recreate the targets metadata file [Not supported yet]
   set-threshold      Sets the threshold for a role
@@ -44,6 +45,7 @@ Commands:
   change-passphrase  Changes the passphrase for given role keys file
   root-keys          Output a JSON serialized array of root keys to STDOUT
   clean              Remove all staged metadata files
+  delegate           Delegate
 
 See "tuf help <command>" for more information on a specific command
 `
