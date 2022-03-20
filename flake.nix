@@ -86,7 +86,7 @@
               gotests
               gotools
               golangci-lint
-              gomod2nix
+              gomod2nix.defaultPackage.${system}
               jq
             ] ++ packages.default.nativeBuildInputs;
         };
