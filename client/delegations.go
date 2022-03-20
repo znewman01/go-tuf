@@ -1,8 +1,6 @@
 package client
 
 import (
-	"fmt"
-
 	"github.com/theupdateframework/go-tuf/data"
 	"github.com/theupdateframework/go-tuf/pkg/targets"
 	"github.com/theupdateframework/go-tuf/verify"
@@ -62,12 +60,13 @@ func (c *Client) getTargetFileMeta(target string) (data.TargetFileMeta, error) {
 // WHO CAN VOUCH FOR THIS TARGET
 // Requires a local snapshot to be loaded and is locked to the snapshot versions.
 // Searches through delegated targets following TUF spec 1.0.19 section 5.6.
-func (c *Client) PrintPeople(target string) error {
+func (c *Client) PrintPeople(target string) ([]data.DelegatedRole, error) {
 	snapshot, err := c.loadLocalSnapshot()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
+	people := make([]data.DelegatedRole, 0)
 	// TODO: print toplevel separate?
 
 	// delegationsIterator covers 5.6.7
@@ -79,7 +78,7 @@ func (c *Client) PrintPeople(target string) error {
 	for i := 0; i < c.MaxDelegations; i++ {
 		d, ok := delegations.Next()
 		if !ok {
-			return nil // done
+			break
 		}
 
 		targets, err := c.loadDelegatedTargets(snapshot, d.Delegatee.Name, d.Verifier)
@@ -90,28 +89,25 @@ func (c *Client) PrintPeople(target string) error {
 		for _, role := range targets.Delegations.Roles {
 			matches, err := role.MatchesPath(target)
 			if err != nil {
-				fmt.Printf("oopsy3")
-				return err
+				return nil, err
 			}
 			if matches {
-				fmt.Printf("%v\n", role)
+				people = append(people, role)
 			}
 		}
 
 		if targets.Delegations != nil {
 			delegationsVerifier, err := verify.NewDelegationsVerifier(targets.Delegations)
 			if err != nil {
-				fmt.Printf("oopsy1")
-				return err
+				return nil, err
 			}
 			err = delegations.Add(targets.Delegations.Roles, d.Delegatee.Name, delegationsVerifier)
 			if err != nil {
-				fmt.Printf("oopsy2")
-				return err
+				return nil, err
 			}
 		}
 	}
-	return nil
+	return people, nil
 }
 
 func (c *Client) loadLocalSnapshot() (*data.Snapshot, error) {

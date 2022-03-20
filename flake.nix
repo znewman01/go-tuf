@@ -60,7 +60,6 @@
             exclude = [ (nix-filter.lib.matchExt "nix") ];
           };
           modules = ./gomod2nix.toml;
-          nativeBuildInputs = [ pkgs.go ];
           checkInputs = [ python python-tuf ];
         };
         apps = {

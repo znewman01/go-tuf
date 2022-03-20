@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/flynn/go-docopt"
 	tuf "github.com/theupdateframework/go-tuf/client"
 	"github.com/theupdateframework/go-tuf/verify"
@@ -23,5 +25,10 @@ func cmdWhoCanSign(args *docopt.Args, client *tuf.Client) error {
 	if _, err := client.Update(); err != nil && !tuf.IsLatestSnapshot(err) {
 		return err
 	}
-	return client.PrintPeople(args.String["<target>"])
+	people, err := client.PrintPeople(args.String["<target>"])
+	if err != nil {
+		return err
+	}
+	fmt.Println("people:", people)
+	return nil
 }
