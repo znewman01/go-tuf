@@ -7,9 +7,9 @@ import (
 	"io"
 	"io/ioutil"
 
-	"github.com/theupdateframework/go-tuf/data"
-	"github.com/theupdateframework/go-tuf/util"
-	"github.com/theupdateframework/go-tuf/verify"
+	"github.com/znewman01/go-tuf/data"
+	"github.com/znewman01/go-tuf/util"
+	"github.com/znewman01/go-tuf/verify"
 )
 
 const (

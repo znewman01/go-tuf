@@ -17,12 +17,12 @@ import (
 	"time"
 
 	"github.com/secure-systems-lab/go-securesystemslib/cjson"
-	"github.com/theupdateframework/go-tuf/data"
-	"github.com/theupdateframework/go-tuf/encrypted"
-	"github.com/theupdateframework/go-tuf/internal/sets"
-	"github.com/theupdateframework/go-tuf/pkg/keys"
-	"github.com/theupdateframework/go-tuf/util"
-	"github.com/theupdateframework/go-tuf/verify"
+	"github.com/znewman01/go-tuf/data"
+	"github.com/znewman01/go-tuf/encrypted"
+	"github.com/znewman01/go-tuf/internal/sets"
+	"github.com/znewman01/go-tuf/pkg/keys"
+	"github.com/znewman01/go-tuf/util"
+	"github.com/znewman01/go-tuf/verify"
 	"golang.org/x/crypto/ed25519"
 	. "gopkg.in/check.v1"
 )

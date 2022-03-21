@@ -12,8 +12,8 @@ import (
 	"time"
 
 	docopt "github.com/flynn/go-docopt"
-	tuf "github.com/theupdateframework/go-tuf"
-	"github.com/theupdateframework/go-tuf/util"
+	tuf "github.com/znewman01/go-tuf"
+	"github.com/znewman01/go-tuf/util"
 	"golang.org/x/term"
 )
 

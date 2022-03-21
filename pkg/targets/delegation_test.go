@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/theupdateframework/go-tuf/data"
-	"github.com/theupdateframework/go-tuf/verify"
+	"github.com/znewman01/go-tuf/data"
+	"github.com/znewman01/go-tuf/verify"
 )
 
 var (

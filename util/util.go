@@ -17,7 +17,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/theupdateframework/go-tuf/data"
+	"github.com/znewman01/go-tuf/data"
 )
 
 type ErrWrongLength struct {

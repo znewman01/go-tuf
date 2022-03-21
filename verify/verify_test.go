@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/theupdateframework/go-tuf/data"
-	"github.com/theupdateframework/go-tuf/pkg/keys"
-	"github.com/theupdateframework/go-tuf/sign"
+	"github.com/znewman01/go-tuf/data"
+	"github.com/znewman01/go-tuf/pkg/keys"
+	"github.com/znewman01/go-tuf/sign"
 	"golang.org/x/crypto/ed25519"
 
 	. "gopkg.in/check.v1"

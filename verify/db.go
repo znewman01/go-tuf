@@ -1,9 +1,9 @@
 package verify
 
 import (
-	"github.com/theupdateframework/go-tuf/data"
-	"github.com/theupdateframework/go-tuf/internal/roles"
-	"github.com/theupdateframework/go-tuf/pkg/keys"
+	"github.com/znewman01/go-tuf/data"
+	"github.com/znewman01/go-tuf/internal/roles"
+	"github.com/znewman01/go-tuf/pkg/keys"
 )
 
 type Role struct {

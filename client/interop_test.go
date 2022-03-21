@@ -11,10 +11,10 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/theupdateframework/go-tuf/util"
+	"github.com/znewman01/go-tuf/util"
 	. "gopkg.in/check.v1"
 
-	goTufGenerator "github.com/theupdateframework/go-tuf/client/testdata/go-tuf/generator"
+	goTufGenerator "github.com/znewman01/go-tuf/client/testdata/go-tuf/generator"
 )
 
 type InteropSuite struct{}

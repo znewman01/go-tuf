@@ -16,13 +16,13 @@ import (
 
 	"github.com/secure-systems-lab/go-securesystemslib/cjson"
 	"github.com/stretchr/testify/assert"
-	tuf "github.com/theupdateframework/go-tuf"
-	"github.com/theupdateframework/go-tuf/data"
-	"github.com/theupdateframework/go-tuf/internal/sets"
-	"github.com/theupdateframework/go-tuf/pkg/keys"
-	"github.com/theupdateframework/go-tuf/sign"
-	"github.com/theupdateframework/go-tuf/util"
-	"github.com/theupdateframework/go-tuf/verify"
+	tuf "github.com/znewman01/go-tuf"
+	"github.com/znewman01/go-tuf/data"
+	"github.com/znewman01/go-tuf/internal/sets"
+	"github.com/znewman01/go-tuf/pkg/keys"
+	"github.com/znewman01/go-tuf/sign"
+	"github.com/znewman01/go-tuf/util"
+	"github.com/znewman01/go-tuf/verify"
 	. "gopkg.in/check.v1"
 )
 

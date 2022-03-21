@@ -5,9 +5,9 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/theupdateframework/go-tuf/data"
-	"github.com/theupdateframework/go-tuf/internal/signer"
-	"github.com/theupdateframework/go-tuf/pkg/keys"
+	"github.com/znewman01/go-tuf/data"
+	"github.com/znewman01/go-tuf/internal/signer"
+	"github.com/znewman01/go-tuf/pkg/keys"
 )
 
 type mockSigner struct {

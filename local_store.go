@@ -10,10 +10,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/theupdateframework/go-tuf/data"
-	"github.com/theupdateframework/go-tuf/encrypted"
-	"github.com/theupdateframework/go-tuf/pkg/keys"
-	"github.com/theupdateframework/go-tuf/util"
+	"github.com/znewman01/go-tuf/data"
+	"github.com/znewman01/go-tuf/encrypted"
+	"github.com/znewman01/go-tuf/pkg/keys"
+	"github.com/znewman01/go-tuf/util"
 )
 
 func signers(privateKeys []*data.PrivateKey) []keys.Signer {

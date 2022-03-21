@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/theupdateframework/go-tuf/data"
+	"github.com/znewman01/go-tuf/data"
 	. "gopkg.in/check.v1"
 )
 

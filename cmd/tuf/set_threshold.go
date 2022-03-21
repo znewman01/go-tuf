@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/flynn/go-docopt"
-	"github.com/theupdateframework/go-tuf"
+	"github.com/znewman01/go-tuf"
 )
 
 func init() {

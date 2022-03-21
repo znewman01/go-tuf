@@ -1,8 +1,8 @@
 package targets
 
 import (
-	"github.com/theupdateframework/go-tuf/data"
-	"github.com/theupdateframework/go-tuf/verify"
+	"github.com/znewman01/go-tuf/data"
+	"github.com/znewman01/go-tuf/verify"
 )
 
 type Delegation struct {

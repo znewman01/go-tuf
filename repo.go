@@ -12,13 +12,13 @@ import (
 	"time"
 
 	"github.com/secure-systems-lab/go-securesystemslib/cjson"
-	"github.com/theupdateframework/go-tuf/data"
-	"github.com/theupdateframework/go-tuf/internal/roles"
-	"github.com/theupdateframework/go-tuf/internal/signer"
-	"github.com/theupdateframework/go-tuf/pkg/keys"
-	"github.com/theupdateframework/go-tuf/sign"
-	"github.com/theupdateframework/go-tuf/util"
-	"github.com/theupdateframework/go-tuf/verify"
+	"github.com/znewman01/go-tuf/data"
+	"github.com/znewman01/go-tuf/internal/roles"
+	"github.com/znewman01/go-tuf/internal/signer"
+	"github.com/znewman01/go-tuf/pkg/keys"
+	"github.com/znewman01/go-tuf/sign"
+	"github.com/znewman01/go-tuf/util"
+	"github.com/znewman01/go-tuf/verify"
 )
 
 // topLevelMetadata determines the order signatures are verified when committing.

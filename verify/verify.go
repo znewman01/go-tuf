@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/secure-systems-lab/go-securesystemslib/cjson"
-	"github.com/theupdateframework/go-tuf/data"
-	"github.com/theupdateframework/go-tuf/internal/roles"
+	"github.com/znewman01/go-tuf/data"
+	"github.com/znewman01/go-tuf/internal/roles"
 )
 
 type signedMeta struct {

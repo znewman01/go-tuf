@@ -9,7 +9,7 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/theupdateframework/go-tuf/data"
+	"github.com/znewman01/go-tuf/data"
 )
 
 func init() {

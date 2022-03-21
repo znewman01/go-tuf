@@ -10,7 +10,7 @@ import (
 	"io/ioutil"
 	"time"
 
-	"github.com/theupdateframework/go-tuf/data"
+	"github.com/znewman01/go-tuf/data"
 )
 
 var expirationDate = time.Date(2100, time.January, 1, 0, 0, 0, 0, time.UTC)

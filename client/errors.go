@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/theupdateframework/go-tuf/verify"
+	"github.com/znewman01/go-tuf/verify"
 )
 
 var (

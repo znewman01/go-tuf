@@ -1,9 +1,9 @@
 package client
 
 import (
-	"github.com/theupdateframework/go-tuf/data"
-	"github.com/theupdateframework/go-tuf/pkg/targets"
-	"github.com/theupdateframework/go-tuf/verify"
+	"github.com/znewman01/go-tuf/data"
+	"github.com/znewman01/go-tuf/pkg/targets"
+	"github.com/znewman01/go-tuf/verify"
 )
 
 // getTargetFileMeta searches for a verified TargetFileMeta matching a target
