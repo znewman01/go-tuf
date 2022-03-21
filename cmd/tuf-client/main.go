@@ -90,7 +90,8 @@ func tufClient(args *docopt.Args) (*tuf.Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	remote, err := tuf.HTTPRemoteStore(args.String["<url>"], nil, nil)
+	url := args.String["<url>"]
+	remote, err := tuf.RemoteStoreFromURL(url)
 	if err != nil {
 		return nil, err
 	}

@@ -5,7 +5,9 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -106,4 +108,65 @@ func (h *httpRemoteStore) url(path string) string {
 		path = "/" + path
 	}
 	return h.baseURL + path
+}
+
+type fileRemoteStore struct {
+	path string // TODO: use DirFS
+}
+
+func FileRemoteStore(url string) (RemoteStore, error) {
+	parts := strings.SplitN(url, "://", 2)
+	if parts[0] != "file" {
+		return nil, ErrInvalidURL{url}
+	}
+	path := parts[1]
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return nil, ErrNotFound{path}
+	}
+	return &fileRemoteStore{
+		path: path,
+	}, nil
+}
+
+func (f *fileRemoteStore) GetMeta(name string) (stream io.ReadCloser, size int64, err error) {
+	file, err := os.Open(filepath.Join(f.path, name))
+	if os.IsNotExist(err) {
+		return nil, 0, ErrNotFound{name}
+	} else if err != nil {
+		return nil, 0, err
+	}
+	info, err := file.Stat()
+	if err != nil {
+		return nil, 0, err
+	}
+	return file, info.Size(), nil
+}
+
+func (f *fileRemoteStore) GetTarget(path string) (stream io.ReadCloser, size int64, err error) {
+	file, err := os.Open(filepath.Join(f.path, "targets", path))
+	if os.IsNotExist(err) {
+		return nil, 0, ErrNotFound{path}
+	} else if err != nil {
+		return nil, 0, err
+	}
+	if err != nil {
+		return nil, 0, ErrNotFound{path}
+	}
+	info, err := file.Stat()
+	if err != nil {
+		return nil, 0, err
+	}
+	return file, info.Size(), nil
+}
+
+func RemoteStoreFromURL(url string) (RemoteStore, error) {
+	parts := strings.SplitN(url, "://", 2)
+	switch parts[0] {
+	case "http":
+		return HTTPRemoteStore(url, nil, nil)
+	case "file":
+		return FileRemoteStore(url)
+	default:
+		return nil, ErrInvalidURL{url}
+	}
 }
