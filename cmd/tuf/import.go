@@ -45,6 +45,6 @@ func cmdImportKey(args *docopt.Args, repo *tuf.Repo) error {
 	if err = repo.ImportPubKey(tufPubKey, role); err != nil {
 		return err
 	}
-	fmt.Fprintf(os.Stderr, "Imported key with ID(s) %v to role %v", tufPubKey.IDs(), role)
+	fmt.Fprintf(os.Stderr, "Imported key with ID(s) %v to role %v\n", tufPubKey.IDs(), role)
 	return nil
 }

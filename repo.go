@@ -1196,17 +1196,7 @@ func (r *Repo) Delegate(keyRole string, name string, paths []string, threshold i
 	}
 	for _, signer := range signers {
 		pubKey := signer.PublicData()
-		for _, id := range pubKey.IDs() {
-			allKeyIDs = append(allKeyIDs, id)
-			value, exists := delegations.Keys[id]
-			if exists {
-				if value != pubKey {
-					panic("keyID exists with different value")
-				}
-				continue
-			}
-			delegations.Keys[id] = pubKey
-		}
+		delegations.AddKey(pubKey)
 	}
 
 	// Fix delegations.Roles: add Role
