@@ -47,6 +47,7 @@ Commands:
   clean              Remove all staged metadata files
   delegate           Delegate
   import-key         Import a PEM public key.
+  import-sigstore    Import a sigstore
 
 See "tuf help <command>" for more information on a specific command
 `

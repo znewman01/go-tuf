@@ -22,6 +22,8 @@ const (
 	KeySchemeECDSA_SHA2_P256   = "ecdsa-sha2-nistp256"
 	KeyTypeRSASSA_PSS_SHA256   = "rsa"
 	KeySchemeRSASSA_PSS_SHA256 = "rsassa-pss-sha256"
+	KeyTypeSigstore            = "sigstore"
+	KeySchemeSigstore          = "sigstore"
 )
 
 var (

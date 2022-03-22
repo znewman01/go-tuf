@@ -102,11 +102,8 @@ func (c *Client) PrintPeople(target string) ([]data.Delegations, error) {
 		}
 
 		if targets.Delegations != nil {
-			delegationsVerifier, err := verify.NewDelegationsVerifier(targets.Delegations)
-			if err != nil {
-				return nil, err
-			}
-			err = delegations.Add(targets.Delegations.Roles, d.Delegatee.Name, delegationsVerifier)
+			bogusVerifier := verify.DelegationsVerifier{}
+			err = delegations.Add(targets.Delegations.Roles, d.Delegatee.Name, bogusVerifier)
 			if err != nil {
 				return nil, err
 			}
