@@ -29,6 +29,17 @@ func cmdWhoCanSign(args *docopt.Args, client *tuf.Client) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("people:", people)
+	for _, delegation := range people {
+		for _, role := range delegation.Roles {
+			fmt.Println("people:", role)
+			for _, keyID := range role.KeyIDs {
+				key, exists := delegation.Keys[keyID]
+				if !exists {
+					panic("invalid, MUST always exist")
+				}
+				fmt.Printf("- key (%v): %s\n", key.Type, key.Value)
+			}
+		}
+	}
 	return nil
 }
