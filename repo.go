@@ -1201,9 +1201,13 @@ func (r *Repo) Delegate(keyRole string, name string, paths []string, threshold i
 
 	// Fix delegations.Roles: add Role
 	// - check that there is no duplicate delegation name
-	for _, delegated := range delegations.Roles {
+	// iterate backwards since we're removing data
+	for i := len(delegations.Roles) - 1; i >= 0; i-- {
+		delegated := delegations.Roles[i]
 		if name == delegated.Name {
-			return ErrInvalidRole{keyRole, "duplicate role name for delegation"}
+			// return ErrInvalidRole{name, "duplicate role name for delegation"}
+			delegations.Roles = append(delegations.Roles[:i], delegations.Roles[i+1:]...)
+			// ^might be leaking memory?
 		}
 	}
 	role := data.DelegatedRole{
