@@ -245,8 +245,8 @@ func (s *ClientSuite) assertErrExpired(c *C, err error, file string) {
 
 func (s *ClientSuite) TestInitRootTooLarge(c *C) {
 	client := NewClient(MemoryLocalStore(), s.remote)
-	s.remote.meta["root.json"] = newFakeFile(make([]byte, defaultRootDownloadLimit+1))
-	c.Assert(client.Init(s.rootKeys(c), 0), Equals, ErrMetaTooLarge{"root.json", defaultRootDownloadLimit + 1, defaultRootDownloadLimit})
+	s.remote.meta["root.json"] = newFakeFile(make([]byte, DefaultRootDownloadLimit+1))
+	c.Assert(client.Init(s.rootKeys(c), 0), Equals, ErrMetaTooLarge{"root.json", DefaultRootDownloadLimit + 1, DefaultRootDownloadLimit})
 }
 
 func (s *ClientSuite) TestInitRootExpired(c *C) {
